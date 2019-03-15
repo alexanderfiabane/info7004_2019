@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from gensim.models.doc2vec import TaggedDocument
 from gensim.models import Doc2Vec
 import re
