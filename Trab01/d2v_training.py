@@ -46,7 +46,7 @@ def clean_dataset(dataframe, column):
     return reviews_train_ds
 
 def main():
-    df= load_dataset("resources/imdb-unlabeled.txt")
+    df = load_dataset("resources/imdb-unlabeled.txt")
     dataset = clean_dataset(df, 'review')
     # vetor de documentos categorizados
     tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(dataset)]
@@ -59,10 +59,11 @@ def main():
 
     max_epochs = 100
     for epoch in range(max_epochs):
-        print('iteration {0}'.format(epoch))
+        print('iteracao {0}'.format(epoch))
         model.train(tagged_data,
                     total_examples=model.corpus_count,
-                    epochs=model.iter)
+                    epochs=model.iter,
+                    start_alpha=0.05)
     model.save("d2v.model")
 
 if __name__ == '__main__':
