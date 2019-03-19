@@ -15,13 +15,14 @@ REPLACE_WITH_SPACE = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
 NO_SPACE = ""
 SPACE = " "
 
+#Retira pontuação, aspas, parenteses, colchetes e números. Também substitui a tag <br></br>, - e / por espaço
 def preprocess_reviews(reviews):
     reviews = [REPLACE_NO_SPACE.sub(NO_SPACE, line.lower()) for line in reviews]
     reviews = [REPLACE_WITH_SPACE.sub(SPACE, line) for line in reviews]
 
     return reviews
 
-
+#Remove as stop words, definidas na lib nltk
 def remove_stop_words(corpus):
     stop_words = stopwords.words('english')
     removed_stop_words = []
@@ -54,11 +55,12 @@ def main():
     tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(dataset)]
 
     # configuração do modelo
-    # usando a versão distributed Memory do Paragraph Vector (Mikilov and Le)
-    # com janela de 2 palavras, considerando paralavras que aparecam > 2
+    # Doc2vec, usando a versão distributed Memory do Paragraph Vector (Mikilov and Le)
+    # com janela de 2 palavras, considerando paralavras que apareçam mais que 2
     model = Doc2Vec(dm=1, vector_size=50, window=2, min_count=2, workers=cores)
     model.build_vocab(tagged_data)
 
+    #Treinamento do modelo definido a cima
     max_epochs = 100
     for epoch in range(max_epochs):
         print('iteracao {0}'.format(epoch))
