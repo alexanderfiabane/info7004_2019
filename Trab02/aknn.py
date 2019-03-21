@@ -9,7 +9,7 @@ def distancia (pontoA, pontoB):
         distancia += math.pow(pontoB[i] - pontoA[i], 2)
     return math.sqrt(distancia)
 
-def aknn(dataset, kvizinhos, metrica_distancia):
+def aknn(dataset, kvizinhos):
 
     for index, value in enumerate(dataset):
         print("indice %d e o valor %d", index, value)
