@@ -6,10 +6,11 @@
 
 import cv2
 import os
+from sklearn.model_selection import cross_val_score
 import numpy as np
 import random
 
-def load_images(path_images, fout, step):
+def load_images(path_images, fout):
 	print ('Loading images...')
 	archives = os.listdir(path_images)
 	images = []
@@ -25,7 +26,7 @@ def load_images(path_images, fout, step):
 		for archive in archives:
 			if archive == image_name:
 				image = cv2.imread(path_images +'/'+ archive, 0)
-				rawpixel(image, label[0], fout, step)
+				rawpixel(image, label[0], fout)
 				
 				#images.append((image, label))
 
@@ -37,15 +38,11 @@ def load_images(path_images, fout, step):
 #
 #########################################################
 	
-def rawpixel(image, label, fout, step):
+def rawpixel(image, label, fout):
 	
 	## novas dimensoes
-	if step/5 < 2:
-		stepy = step
-	else:
-		stepy = int(step/2)
-	X= step
-	Y= stepy
+	X= 40
+	Y= 20
 	
 	image = cv2.resize(image, (X,Y) )
 	#cv2.imshow("image", image )
@@ -72,12 +69,15 @@ def rawpixel(image, label, fout, step):
 
 if __name__ == "__main__":
 
-	for i in range(5,100, 5):
-		fout = open("features"+str(i)+".txt","w")
+	fout = open("features.txt", "w")
 
-		images = load_images('digits/data', fout, i)
+	images = load_images('digits/data', fout)
 
-		fout.close
+	fout.close
+
+
+
+
 	
 		
 

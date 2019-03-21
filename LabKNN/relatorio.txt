@@ -1,0 +1,136 @@
+﻿Trabalho sobre KNN realizado no LAB (14/03/2019)
+
+Executando um for de 5 até 100 com salto de 5 (em python range(5,100,5)), no arquivo digits.py modificando os valores de X e Y da imagem, gerou-se 20 features.
+Os valores de K=3 e a métrica euclidiana foram mantidas
+
+OBS: Tentou-se manter uma certa proporcionalidade com a proporção original, através da rotina abaixo
+
+    if step/5 < 2:
+		stepy = step
+	else:
+		stepy = int(step/2)
+	X= step
+	Y= stepy
+
+Com isso, chega-se no seguinte resultado:	
+	
+Melhor acurácia: 0.926    (Arquivo: features50.txt)
+Matriz de confusão:
+ [ 96   0   0   0   0   1   0   0   0   0]
+ [  0  95   0   0   0   0   0   0   0   0]
+ [  1   5 100   0   1   0   1   3   0   0]
+ [  0   1   0 101   0   1   0   0   0   0]
+ [  0  10   2   0  82   0   0   0   0   1]
+ [  1   0   0   6   0  89   0   0   1   0]
+ [  0   6   0   0   0   0 100   0   0   0]
+ [  1   5   0   0   0   0   0  88   0   3]
+ [  0   5   0   3   0   1   0   2  75   1]
+ [  0   1   0   0   3   0   0   7   1 100]
+
+Pior acurácia: 0.791    (Arquivo: features5.txt)
+Matriz de confusão:
+ [91  2  0  1  0  1  0  0  2  0]
+ [ 0 91  0  0  0  0  1  1  2  0]
+ [ 4 11 74  9  0  3  1  3  4  2]
+ [ 2  0  1 92  0  4  1  1  1  1]
+ [ 1  9  1  0 79  1  0  1  0  3]
+ [ 4  4  0 13  0 72  2  0  2  0]
+ [ 1  3  0  0  2  3 96  0  1  0]
+ [ 1  6  0  1  3  1  0 74  0 11]
+ [ 0  6  1  7  2  9  0  9 52  1]
+ [ 0  4  1  1  5  0  0 31  0 70]
+ 
+ Analisando as matrizes de confusão, verifica-se uma boa melhora no desempenho com a representação 'features50' (concentração maior na diagonal principal, representando maior número de acertos). 
+ Utilizando essa representação e uma cross validation (cross_val_score) com K variando de 1 a 31, tem-se a lista de acurácia | métrica | e valor de K abaixo. Dentro de um mesmo K a métrica não exerceu 
+ influência na melhora do desempenho. 
+ 
+[0.9309164233821259, 'euclidean', 1], 
+[0.9309164233821259, 'manhattan', 1], 
+[0.9309164233821259, 'minkowski', 1], 
+[0.9231813549799563, 'euclidean', 3], 
+[0.9231813549799563, 'manhattan', 3], 
+[0.9231813549799563, 'minkowski', 3], 
+[0.9188733827809072, 'euclidean', 5], 
+[0.9188733827809072, 'manhattan', 5], 
+[0.9188733827809072, 'minkowski', 5], 
+[0.9106954106145663, 'euclidean', 4], 
+[0.9106954106145663, 'manhattan', 4], 
+[0.9106954106145663, 'minkowski', 4], 
+[0.9058618761978072, 'euclidean', 6], 
+[0.9058618761978072, 'manhattan', 6], 
+[0.9058618761978072, 'minkowski', 6], 
+[0.9057778346732986, 'euclidean', 7], 
+[0.9057778346732986, 'manhattan', 7], 
+[0.9057778346732986, 'minkowski', 7], 
+[0.9029122973437398, 'euclidean', 2], 
+[0.9029122973437398, 'manhattan', 2], 
+[0.9029122973437398, 'minkowski', 2], 
+[0.8990056488188932, 'euclidean', 9], 
+[0.8990056488188932, 'manhattan', 9], 
+[0.8990056488188932, 'minkowski', 9], 
+[0.895059844506935, 'euclidean', 8], 
+[0.895059844506935, 'manhattan', 8], 
+[0.895059844506935, 'minkowski', 8], 
+[0.8921697769637718, 'euclidean', 11], 
+[0.8921697769637718, 'manhattan', 11], 
+[0.8921697769637718, 'minkowski', 11], 
+[0.8901342818378863, 'euclidean', 10], 
+[0.8901342818378863, 'manhattan', 10], 
+[0.8901342818378863, 'minkowski', 10], 
+[0.8822902866838058, 'euclidean', 13], 
+[0.8822902866838058, 'manhattan', 13], 
+[0.8822902866838058, 'minkowski', 13], 
+[0.8822803856937067, 'euclidean', 15], 
+[0.8822803856937067, 'manhattan', 15], 
+[0.8822803856937067, 'minkowski', 15], 
+[0.8812525686262858, 'euclidean', 14], 
+[0.8812525686262858, 'manhattan', 14], 
+[0.8812525686262858, 'minkowski', 14], 
+[0.8804072410215597, 'euclidean', 17], 
+[0.8804072410215597, 'manhattan', 17], 
+[0.8804072410215597, 'minkowski', 17], 
+[0.8803800301372059, 'euclidean', 16], 
+[0.8803800301372059, 'manhattan', 16], 
+[0.8803800301372059, 'minkowski', 16], 
+[0.8801999370473383, 'euclidean', 12], 
+[0.8801999370473383, 'manhattan', 12], 
+[0.8801999370473383, 'minkowski', 12], 
+[0.8763542168415908, 'euclidean', 19], 
+[0.8763542168415908, 'manhattan', 19], 
+[0.8763542168415908, 'minkowski', 19], 
+[0.8763346465198415, 'euclidean', 18], 
+[0.8763346465198415, 'manhattan', 18], 
+[0.8763346465198415, 'minkowski', 18], 
+[0.8743779174364557, 'euclidean', 23], 
+[0.8743779174364557, 'manhattan', 23], 
+[0.8743779174364557, 'minkowski', 23], 
+[0.8725865788585624, 'euclidean', 21], 
+[0.8725865788585624, 'manhattan', 21], 
+[0.8725865788585624, 'minkowski', 21], 
+[0.8704156479925956, 'euclidean', 20], 
+[0.8704156479925956, 'manhattan', 20], 
+[0.8704156479925956, 'minkowski', 20], 
+[0.8704148101510795, 'euclidean', 22], 
+[0.8704148101510795, 'manhattan', 22], 
+[0.8704148101510795, 'minkowski', 22], 
+[0.8673016184826595, 'euclidean', 24], 
+[0.8673016184826595, 'manhattan', 24], 
+[0.8673016184826595, 'minkowski', 24], 
+[0.8663582881802414, 'euclidean', 25], 
+[0.8663582881802414, 'manhattan', 25], 
+[0.8663582881802414, 'minkowski', 25], 
+[0.8642979015319616, 'euclidean', 26], 
+[0.8642979015319616, 'manhattan', 26], 
+[0.8642979015319616, 'minkowski', 26], 
+[0.8604127099489489, 'euclidean', 29], 
+[0.8604127099489489, 'manhattan', 29], 
+[0.8604127099489489, 'minkowski', 29], 
+[0.8602648402747635, 'euclidean', 30], 
+[0.8602648402747635, 'manhattan', 30], 
+[0.8602648402747635, 'minkowski', 30], 
+[0.8594498218234017, 'euclidean', 27], 
+[0.8594498218234017, 'manhattan', 27], 
+[0.8594498218234017, 'minkowski', 27], 
+[0.8584283372393348, 'euclidean', 28], 
+[0.8584283372393348, 'manhattan', 28], 
+[0.8584283372393348, 'minkowski', 28]
