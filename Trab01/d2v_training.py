@@ -57,7 +57,7 @@ def main():
     # configuração do modelo
     # Doc2vec, usando a versão distributed Memory do Paragraph Vector (Mikilov and Le)
     # com janela de 2 palavras, considerando paralavras que apareçam mais que 2
-    model = Doc2Vec(dm=1, vector_size=50, window=2, min_count=2, workers=cores)
+    model = Doc2Vec(dm=1, vector_size=150, window=3, min_count=5, workers=cores)
     model.build_vocab(tagged_data)
 
     #Treinamento do modelo definido a cima
