@@ -66,17 +66,22 @@ def main(data):
         # print(grid.cv_results_)
         # 1. we will loop through reasonable values of k
         for k in k_range:
-                metrics = ['euclidean', 'manhattan', 'minkowski']
+                weights = ['uniform', 'distance']
                 # 2. run KNeighborsClassifier with k neighbours        #
-                for metric in metrics:
-                      knn = KNeighborsClassifier(n_neighbors=k, metric=metric)
+                for weight in weights:
+                      knn = KNeighborsClassifier(n_neighbors=k, weights=weight)
                       # 3. obtain cross_val_score for KNeighborsClassifier with k neighbours
                       scores = cross_val_score(knn, X_train, y_train, cv=10, scoring='accuracy')
                       # 4. append mean of scores for k neighbors to k_scores list
-                      k_scores.append([scores.mean(), metric, k])        #
+                      k_scores.append([scores.mean(), weight, k])        #
 
         print(sorted(k_scores, key=itemgetter(0), reverse=True))
 
+        # escreve no arquivo
+        # file = open("crossvalid_scores.txt", "w")
+        # for tupla in scores:
+        #         file.write(tupla + '\n')
+        # file.close()
 
         # print 'Fitting knn'
         # neigh.fit(X_train, y_train)
