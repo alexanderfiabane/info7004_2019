@@ -9,7 +9,7 @@ def main():
     datasets = ['train', 'test']
     for dataset in datasets:
         #carrega o dataset
-        imdb = pd.read_csv("resources/"+dataset+".txt", encoding="ISO-8859-1", names=["index", "type", "review", "label", "file"])
+        imdb = pd.read_csv("resources/"+dataset+".txt", encoding="ISO-8859-1", skiprows=[1], names=["index", "type", "review", "label", "file"])
         tuplas = []
         for i,v in imdb.iterrows():
             label = str(0) if v['label'] == 'pos' else str(1)  # coloca no formato solicitado label 0 se for pos e 1 se neg
