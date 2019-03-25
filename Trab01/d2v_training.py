@@ -34,7 +34,7 @@ def remove_stop_words(corpus):
     return removed_stop_words
 
 def load_dataset(arquivo):
-    dframe = pd.read_csv(arquivo, encoding="ISO-8859-1", names=["index", "type", "review", "label", "file"])
+    dframe = pd.read_csv(arquivo, skiprows=[1], encoding="ISO-8859-1", names=["index", "type", "review", "label", "file"])
     return dframe
 
 def clean_dataset(dataframe, column):
@@ -56,18 +56,18 @@ def main():
 
     # configuração do modelo
     # Doc2vec, usando a versão distributed Memory do Paragraph Vector (Mikilov and Le)
-    # com janela de 2 palavras, considerando paralavras que apareçam mais que 2
-    model = Doc2Vec(dm=1, vector_size=150, window=3, min_count=5, workers=cores)
+    model = Doc2Vec(dm=1, vector_size=10, window=5, min_count=2, workers=cores, epochs=100)
     model.build_vocab(tagged_data)
 
-    #Treinamento do modelo definido a cima
-    max_epochs = 100
-    for epoch in range(max_epochs):
-        print('iteracao {0}'.format(epoch))
-        model.train(tagged_data,
-                    total_examples=model.corpus_count,
-                    epochs=model.iter,
-                    start_alpha=0.05)
+    #Treinamento do modelo definido acima
+    model.train(tagged_data, total_examples=model.corpus_count, epochs=model.epochs, start_alpha=0.05)
+    # max_epochs = 100
+    # for epoch in range(max_epochs):
+    #     print('iteracao {0}'.format(epoch))
+    #     model.train(tagged_data,
+    #                 total_examples=model.corpus_count,
+    #                 epochs=model.epochs,
+    #                 start_alpha=0.05)
     model.save("d2v.model")
 
 if __name__ == '__main__':
