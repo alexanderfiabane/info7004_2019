@@ -48,6 +48,7 @@ def clean_dataset(dataframe, column):
         reviews_train_ds.append(row[column])
     return reviews_train_ds
 
+# def main(vector_size, window, min_count):
 def main():
     df = load_dataset("resources/imdb-unlabeled.txt")
     dataset = clean_dataset(df, 'review')
@@ -56,20 +57,16 @@ def main():
 
     # configuração do modelo
     # Doc2vec, usando a versão distributed Memory do Paragraph Vector (Mikilov and Le)
-    model = Doc2Vec(dm=1, vector_size=10, window=5, min_count=2, workers=cores, epochs=100)
+    vector_size = 1000
+    window = 20
+    min_count = 3
+    model = Doc2Vec(dm=1, vector_size=vector_size, window=window, min_count=min_count, workers=cores, epochs=10)
     model.build_vocab(tagged_data)
 
     #Treinamento do modelo definido acima
-    model.train(tagged_data, total_examples=model.corpus_count, epochs=model.epochs, start_alpha=0.05)
-    # max_epochs = 100
-    # for epoch in range(max_epochs):
-    #     print('iteracao {0}'.format(epoch))
-    #     model.train(tagged_data,
-    #                 total_examples=model.corpus_count,
-    #                 epochs=model.epochs,
-    #                 start_alpha=0.05)
-    model.save("d2v.model")
-
+    model.train(tagged_data, total_examples=model.corpus_count, epochs=model.epochs)
+    model.save("d2v_v"+str(vector_size)+"_w"+str(window)+"_mc"+str(min_count)+".model")
+    # return model
 if __name__ == '__main__':
     main()
 

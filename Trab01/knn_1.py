@@ -104,9 +104,9 @@ def main(data, nome_representacao):
 	# pl.show()
 
 if __name__ == "__main__":
-        if len(sys.argv) != 2:
-                sys.exit("Use: knn.py <data>")
+        if len(sys.argv) != 3:
+                sys.exit("Use: knn.py <data> <name_file>")
 
-        main(sys.argv[1])
+        main(sys.argv[1], sys.argv[2])
 
 

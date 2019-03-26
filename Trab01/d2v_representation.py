@@ -2,10 +2,14 @@
 # -*- coding: utf-8 -*-
 from gensim.models import Doc2Vec
 import pandas as pd
+import sys
 
-def main():
+# def main(model, nome_representacao):
+def main(name_file):
     #carrega o modelo treinado na base unlabeled
-    model = Doc2Vec.load("d2v.model")
+    # model = Doc2Vec.load(model)
+    model = Doc2Vec.load("d2v_v500_w10_mc5.model")
+    # files = []
     datasets = ['train', 'test']
     for dataset in datasets:
         #carrega o dataset
@@ -17,13 +21,18 @@ def main():
             tuplas.append((label, vetor)) #armazena o rótulo (label positivo ou negativo) e o vetor (característica:valor)
 
         # escreve no arquivo
-        file = open("representacao_"+dataset+".txt", "w")
+        # file = open("representacao_"+dataset+"_"+model.vector_size+".txt", "w")
+        file = open("representacao_" + dataset + "_"+name_file+".txt", "w")
         for tupla in tuplas:
             txt = tupla[0]+"\t"
             for i, v in enumerate(tupla[1]):
                 txt = txt + str(i) + ":" + str(v) + "\t"
             file.write(txt+'\n')
         file.close()
-
+        # files.append(file)
+    # return files
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) != 2:
+        sys.exit("Use: d2v_representation.py <name_file>")
+
+    main(sys.argv[1])
