@@ -5,10 +5,10 @@ import pandas as pd
 import sys
 
 # def main(model, nome_representacao):
-def main(name_file):
+def main(model, name_file):
     #carrega o modelo treinado na base unlabeled
     # model = Doc2Vec.load(model)
-    model = Doc2Vec.load("d2v_v500_w10_mc5.model")
+    model = Doc2Vec.load(model)
     # files = []
     datasets = ['train', 'test']
     for dataset in datasets:
@@ -32,7 +32,7 @@ def main(name_file):
         # files.append(file)
     # return files
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        sys.exit("Use: d2v_representation.py <name_file>")
+    if len(sys.argv) != 3:
+        sys.exit("Use: d2v_representation.py <name_model> <name_file>")
 
-    main(sys.argv[1])
+    main(sys.argv[1], sys.argv[2])
