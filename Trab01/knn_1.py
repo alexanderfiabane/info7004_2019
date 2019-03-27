@@ -11,7 +11,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import RandomizedSearchCV
 from operator import itemgetter
 from sklearn import preprocessing
-import pylab as pl
+#import pylab as pl
 
 def main(data):
 
