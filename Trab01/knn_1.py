@@ -13,7 +13,7 @@ from operator import itemgetter
 from sklearn import preprocessing
 import pylab as pl
 
-def main(data, nome_representacao):
+def main(data):
 
         # loads data
         print("Loading data...")
@@ -68,17 +68,16 @@ def main(data, nome_representacao):
         for k in k_range:
                 # 2. run KNeighborsClassifier with k neighbours
                 knn = KNeighborsClassifier(n_neighbors=k, metric='euclidean')
-                # 3. obtain cross_val_score for KNeighborsClassifier with k neighbours
-                scores = cross_val_score(knn, X_train, y_train, cv=10, scoring='accuracy')
-                # 4. append mean of scores for k neighbors to k_scores list
-                k_scores.append([scores.mean(), k])
+                knn.fit(X_train, y_train)
+                k_scores.append([knn.score(X_test, y_test), k])
 
         scores = sorted(k_scores, key=itemgetter(0), reverse=True)
-        file = open("validacao_" + nome_representacao + ".txt", "w")
-        for tupla in scores:
-                txt = "accuracy: " + str(tupla[0]) + "- k: " + str(tupla[1])
-                file.write(txt + '\n')
-        file.close()
+        print(scores)
+        # file = open("validacao_" + nome_representacao + ".txt", "w")
+        # for tupla in scores:
+        #         txt = "accuracy: " + str(tupla[0]) + "- k: " + str(tupla[1])
+        #         file.write(txt + '\n')
+        # file.close()
         # escreve no arquivo
         # file = open("crossvalid_scores.txt", "w")
         # for tupla in scores:
@@ -104,9 +103,9 @@ def main(data, nome_representacao):
 	# pl.show()
 
 if __name__ == "__main__":
-        if len(sys.argv) != 3:
-                sys.exit("Use: knn.py <data> <name_file>")
+        if len(sys.argv) != 2:
+                sys.exit("Use: knn_1.py <data>")
 
-        main(sys.argv[1], sys.argv[2])
+        main(sys.argv[1])
 
 

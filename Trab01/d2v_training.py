@@ -4,6 +4,7 @@ from gensim.models.doc2vec import TaggedDocument
 from gensim.models import Doc2Vec
 from gensim.parsing.preprocessing import remove_stopwords, strip_punctuation, strip_multiple_whitespaces
 from gensim import utils
+from gensim.test.utils import common_texts
 import re
 import random
 from nltk.corpus import stopwords
@@ -56,22 +57,25 @@ def clean_dataset(dataframe, column):
 # def main(vector_size, window, min_count):
 def main():
     df = load_dataset("resources/imdb-unlabeled.txt")
-    dataset = clean_dataset(df, 'review')
+    dftrain = load_dataset("resources/train.txt")
+    dfresult = pd.concat([df, dftrain])
+    dataset = clean_dataset(dfresult, 'review')
     # vetor de documentos categorizados
-    # tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(dataset)]
-    tagged_data = [TaggedDocument(utils.to_unicode(line).split(), ["unsup" + '_%s' % item_no]) for item_no, line in enumerate(dataset)]
-    tagged_data_shuffled = list(tagged_data)
-    random.shuffle(tagged_data_shuffled)
+    tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(common_texts)]
+    tagged_data_imdb = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(dataset)]
+    #tagged_data = [TaggedDocument(utils.to_unicode(line).split(), ["unsup" + '_%s' % item_no]) for item_no, line in enumerate(dataset)]
+    # tagged_data_shuffled = list(tagged_data)
+    # random.shuffle(tagged_data_shuffled)
     # configuração do modelo
     # Doc2vec, usando a versão distributed Memory do Paragraph Vector (Mikilov and Le)
-    vector_size = 100
+    vector_size = 400
     window = 10
     min_count = 1
     model = Doc2Vec(vector_size=vector_size, window=window, min_count=min_count, workers=cores, epochs=10, sample=1e-4, negative=5)
     model.build_vocab(tagged_data)
 
     #Treinamento do modelo definido acima
-    model.train(tagged_data_shuffled, total_examples=model.corpus_count, epochs=model.epochs)
+    model.train(tagged_data_imdb, total_examples=model.corpus_count, epochs=model.epochs)
     model.save("d2v_v"+str(vector_size)+"_w"+str(window)+"_mc"+str(min_count)+".model")
     # return model
 if __name__ == '__main__':
