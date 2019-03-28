@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from gensim.models.doc2vec import TaggedDocument
-from gensim.models import Word2Vec
+from gensim.models import Doc2Vec
 from gensim.parsing.preprocessing import remove_stopwords, strip_punctuation, strip_multiple_whitespaces
-from gensim import utils
-from gensim.test.utils import common_texts
 import re
-import random
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import pandas as pd
@@ -42,9 +39,6 @@ def load_dataset(arquivo):
     return dframe
 
 def clean_dataset(dataframe, column):
-    # dataframe[column] = preprocess_reviews(dataframe[column])
-    # dataframe[column] = remove_stop_words(dataframe[column])
-
     reviews_train_ds = []
     # gerando o ds para treinamento
     for index, row in dataframe.iterrows():
@@ -64,12 +58,12 @@ def main():
 
     # vetor de documentos categorizados
     #tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(common_texts)]
-    #tagged_data_imdb = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(dataset)]
-    vocab_list = []
-    for review in dataset:
-        vocab_list.append(review.split())
+    tagged_data_imdb = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(dataset)]
+    # vocab_list = []
+    # for review in dataset:
+    #     vocab_list.append(review.split())
     #print(vocab_list)
-    #tagged_data = [TaggedDocument(utils.to_unicode(line).split(), ["unsup" + '_%s' % item_no]) for item_no, line in enumerate(dataset)]
+
     # tagged_data_shuffled = list(tagged_data)
     # random.shuffle(tagged_data_shuffled)
     # configuração do modelo
@@ -77,11 +71,11 @@ def main():
     vector_size = 150
     window = 10
     min_count = 1
-    model = Word2Vec(vocab_list, size=vector_size, window=window, min_count=min_count, workers=cores, iter=10, sample=1e-4, negative=5)
-    #model.build_vocab(tagged_data_imdb)
+    model = Doc2Vec(size=vector_size, window=window, min_count=min_count, workers=cores, iter=10, sample=1e-4, negative=5)
+    model.build_vocab(tagged_data_imdb)
 
     #Treinamento do modelo definido acima
-    model.train(vocab_list, total_examples=model.corpus_count, epochs=model.iter)
+    model.train(tagged_data_imdb, total_examples=model.corpus_count, epochs=model.iter)
     model.save("w2v_v"+str(vector_size)+"_w"+str(window)+"_mc"+str(min_count)+".model")
     # return model
 if __name__ == '__main__':

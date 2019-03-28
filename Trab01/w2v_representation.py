@@ -6,49 +6,44 @@ import numpy as np
 import pandas as pd
 import sys
 
-
 def clean_line(line):
     no_whitespace = strip_multiple_whitespaces(line)
     no_punctuation = strip_punctuation(no_whitespace)
     stop_words = remove_stopwords(no_punctuation)
     return stop_words
 
-
-# def main(model, nome_representacao):
 def main(model, name_file):
-    # carrega o modelo treinado na base unlabeled
-    # model = Doc2Vec.load(model)
+    # carrega o modelo
     model = Word2Vec.load(model)
-    # files = []
     datasets = ['train', 'test']
     for dataset in datasets:
         # carrega o dataset
         imdb = pd.read_csv("resources/" + dataset + ".txt", encoding="ISO-8859-1", skiprows=[1],
                            names=["index", "type", "review", "label", "file"])
-
         tuplas = []
+        model_vocab = model.wv
         for i, v in imdb.iterrows():
             label = str(0) if v['label'] == 'pos' else str(1)  # coloca no formato solicitado label 0 se for pos e 1 se neg
             cleaned_review = clean_line(v['review']) # limpa a review
-            words = cleaned_review.split()
-            vector_review = []
+            words = cleaned_review.split() #separa em palavras
+            vector_review = [] #vetor da review que conterá o vetor de palavras
             for word in words:
-                valor_palavra = model.wv[word]  # infere a review de train/test no modelo treinado anteriormente
-                vector_review.append(valor_palavra)
-            tuplas.append((label, np.mean(vector_review, axis=0)))  # armazena o rótulo (label positivo ou negativo) e o vetor (característica:valor)
+                if word not in model_vocab.vocab:
+                    continue
+                valor_palavra = model.wv[word]  # infere a palavra de train/test no modelo treinado anteriormente
+                vector_review.append(valor_palavra) # coloca no vetor da review correspondente
+            # Calcula a média de valor de cada vetor de palavra, gerando o vetor de características da review
+            # correspondente e armazena o rótulo (label positivo ou negativo) e o vetor (característica:valor)
+            tuplas.append((label, np.mean(vector_review, axis=0)))
 
         # escreve no arquivo
-        # file = open("representacao_"+dataset+"_"+model.vector_size+".txt", "w")
-        file = open("representacao_w2v_" + dataset + "_" + name_file + ".txt", "w")
+        file = open("representacao_" + dataset + "_" + name_file + ".txt", "w")
         for tupla in tuplas:
             txt = tupla[0] + "\t"
             for i, v in enumerate(tupla[1]):
                 txt = txt + str(i) + ":" + str(v) + "\t"
             file.write(txt + '\n')
         file.close()
-        # files.append(file)
-    # return files
-
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:

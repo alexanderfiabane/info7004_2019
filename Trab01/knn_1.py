@@ -39,7 +39,7 @@ def main(data):
 
         # list of integers 1 to 30
         # integers we want to try
-        k_range = range(1, 9)
+        k_range = range(1, 11, 2)
 
         # list of scores from k_range
         k_scores = []
