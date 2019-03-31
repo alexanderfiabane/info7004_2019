@@ -3,12 +3,11 @@
 import sys
 import math
 from sklearn.datasets import load_svmlight_file
-from sklearn.model_selection import train_test_split
 from operator import itemgetter
 from collections import Counter
 import matplotlib.pyplot as plt
 import scikitplot as skplt
-
+import time
 
 def distancia_euclidiana (pontoA, pontoB):
     distancia = 0
@@ -24,7 +23,7 @@ def aknn(kvizinhos, xtrain, ytrain, xtest):
         distance = distancia_euclidiana(xtrain[i], xtest)
         dists.append((xtrain[i], distance, ytrain[i]))
     sorted_dists = sorted(dists, key=itemgetter(1))
-    k_nearest_dists = sorted_dists[:kvizinhos]
+    k_nearest_dists = sorted_dists[:int(kvizinhos)]
     return k_nearest_dists
 
 def aknn_predict(k_nearest_dists):
@@ -54,23 +53,29 @@ def main(dataset_train, dataset_test, k):
     X_train, y_train = load_svmlight_file(dataset_train)
     X_test, y_test = load_svmlight_file(dataset_test)
 
-    # Caso tenha apenas um dataset para treinar e testar
-    # X_data, y_data = load_svmlight_file(dataset)
-    # splits data
-    # print("Spliting data... ")
-    # X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.5, random_state=5)
-
     X_train = X_train.toarray()
     X_test = X_test.toarray()
 
     predictions = []
+    print("akNN starting...")
+    start = time.time()
     for i in range(len(X_test)):
         k_nearest_dists = aknn(kvizinhos=k, xtrain=X_train, ytrain=y_train, xtest=X_test[i])
         result = aknn_predict(k_nearest_dists)
         predictions.append(result)
+    print("akNN finished...")
+    print("Getting score...")
     score = aknn_score(y_test, predictions)
-    confusion_matrix(y_test, predictions)
     print("Accuracy: %f" % score)
+    end = time.time()
+    tempo = end-start
+    print("Tempo de execução(s): %f" % tempo)
+    print("Ploting confusion matrix...")
+    confusion_matrix(y_test, predictions)
+    file = open("acuracia_tempo.txt", "w")
+    txt = "accuracy: " + str(score) + " Tempo de execução(s): " + str(tempo)
+    file.write(txt)
+    file.close()
 
 
 if __name__ == '__main__':

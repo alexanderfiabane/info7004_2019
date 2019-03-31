@@ -6,6 +6,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.datasets import load_svmlight_file
 import matplotlib.pyplot as plt
 import scikitplot as skplt
+import time
 
 def main(dataset_train, dataset_test, k):
 
@@ -17,6 +18,7 @@ def main(dataset_train, dataset_test, k):
         X_test = X_test.toarray()
         
         # cria um kNN
+        start = time.time()
         neigh = KNeighborsClassifier(n_neighbors=int(k), metric='euclidean')
 
         print('Fitting knn')
@@ -26,14 +28,21 @@ def main(dataset_train, dataset_test, k):
         y_pred = neigh.predict(X_test)
 
         # mostra o resultado do classificador na base de teste
-        print(neigh.score(X_test, y_test))
+        accuracy = neigh.score(X_test, y_test)
+        end = time.time()
+        print("Accuracy: %f" % accuracy)
+        tempo = end-start
+        print("Tempo de execução(s): %f" % tempo)
 
         # cria a matriz de confusao
         skplt.metrics.plot_confusion_matrix(y_true=y_test, y_pred=y_pred, normalize=False,
                                             title="Matrix de Confusão (sklearn knn)")
         plt.tight_layout()
         plt.savefig("confusion_matrix_sklearn_knn.pdf")
-
+        file = open("acuracia_tempo.txt", "w")
+        txt = "accuracy: " + str(accuracy) + " Tempo de execução(s): " + str(tempo)
+        file.write(txt)
+        file.close()
 
 if __name__ == "__main__":
 
