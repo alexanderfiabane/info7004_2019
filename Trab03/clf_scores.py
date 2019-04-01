@@ -7,15 +7,13 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix
 from sklearn.utils import shuffle
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker
 from matplotlib.ticker import FormatStrFormatter
 import scikitplot as skplt
-import multiprocessing
-cores = multiprocessing.cpu_count()
+
 
 #Compare o desempenho desses classificadores em função da disponibilidade de base de treinamento.
 # Alimente os classificadores com blocos de 1000 exemplos e plote num gráfico o desempenho na base de testes e
@@ -29,7 +27,7 @@ def plot_curva_acuracia_tamanho_base(classificadores, size):
         y = []
         for score in scores:
             y.append(score[0])
-        plt.plot(x, y, color="blue")
+        plt.plot(x, y, color="blue", marker='P')
         # Add titles
         plt.title(name, loc="center")
         plt.xlabel("Blocos de Testes")
@@ -57,8 +55,6 @@ def plot_melhor_desempenho_1k_25k(classificadores):
 
     ax.bar(size, scores_1k, width=-1.*width, align='edge', label="1k", color='blue', ecolor='black')
     ax.bar(size, scores_25k, width=width, align='edge', label="25k", color='red', ecolor='black')
-    ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(0.05))
-    ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     ax.set_ylabel('Acurácia')
     ax.set_xlabel('Classificadores')
     ax.set_xticks(size)
@@ -137,13 +133,13 @@ def main(rep_train, rep_test):
 
         # lista de classificadores
         # kNN
-        # start = time.time()
-        # knn = KNeighborsClassifier(n_neighbors=9, metric='euclidean', n_jobs=cores)
-        # knn.fit(Xtrain, Ytrain)
-        # score = knn.score(Xtest, y_data_test)
-        # Ypred = knn.predict(Xtest)
-        # end = time.time()
-        # knn_scores.append([score, (end-start), Ypred, i])
+        start = time.time()
+        knn = KNeighborsClassifier(n_neighbors=9, metric='euclidean')
+        knn.fit(Xtrain, Ytrain)
+        score = knn.score(Xtest, y_data_test)
+        Ypred = knn.predict(Xtest)
+        end = time.time()
+        knn_scores.append([score, (end-start), Ypred, i])
 
         # Naïve Bayes
         # Gaussian
@@ -173,9 +169,8 @@ def main(rep_train, rep_test):
         end = time.time()
         LR_scores.append([score, (end-start), Ypred, i])
 
-    # classificadores = [["kNN", knn_scores], ["Naive Bayes", NB_Gaussian_scores], ["LDA", LDA_scores],
-    #                    ["Logistic Regression", LR_scores]]
-    classificadores = [["Naïve Bayes", NB_Gaussian_scores], ["LDA", LDA_scores], ["Logistic Regression", LR_scores]]
+    classificadores = [["kNN", knn_scores], ["Naive Bayes", NB_Gaussian_scores], ["LDA", LDA_scores], ["Logistic Regression", LR_scores]]
+    # classificadores = [["Naïve Bayes", NB_Gaussian_scores], ["LDA", LDA_scores], ["Logistic Regression", LR_scores]]
 
     print("Gerando gráficos...")
     plot_melhor_desempenho_1k_25k(classificadores)
