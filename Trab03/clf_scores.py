@@ -128,14 +128,13 @@ def main(rep_train, rep_test):
         Ytrain = y_data_train[:i]
 
         X = Xtrain.toarray()
-        Y = Ytrain
         Xtest = X_data_test.toarray()
 
         # lista de classificadores
         # kNN
         start = time.time()
         knn = KNeighborsClassifier(n_neighbors=9, metric='euclidean')
-        knn.fit(Xtrain, Ytrain)
+        knn.fit(X, Ytrain)
         score = knn.score(Xtest, y_data_test)
         Ypred = knn.predict(Xtest)
         end = time.time()
@@ -145,7 +144,7 @@ def main(rep_train, rep_test):
         # Gaussian
         start = time.time()
         gnb = GaussianNB()
-        gnb.fit(X, Y)
+        gnb.fit(X, Ytrain)
         score = gnb.score(Xtest, y_data_test)
         Ypred = gnb.predict(Xtest)
         end = time.time()
@@ -154,7 +153,7 @@ def main(rep_train, rep_test):
         # LDA
         start = time.time()
         lda = LDA()
-        lda.fit(X, Y)
+        lda.fit(X, Ytrain)
         score = lda.score(Xtest, y_data_test)
         Ypred = lda.predict(Xtest)
         end = time.time()
@@ -163,7 +162,7 @@ def main(rep_train, rep_test):
         # Logistic Regression
         start = time.time()
         lr = LogisticRegression(solver='liblinear')
-        lr.fit(X, Y)
+        lr.fit(X, Ytrain)
         score = lr.score(Xtest, y_data_test)
         Ypred = lr.predict(Xtest)
         end = time.time()
