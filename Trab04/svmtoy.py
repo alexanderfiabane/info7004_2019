@@ -8,7 +8,7 @@ import numpy
 from sklearn import svm
 from sklearn.metrics import confusion_matrix
 from sklearn.datasets import load_svmlight_file, make_classification, make_gaussian_quantiles, make_blobs
-from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
@@ -44,59 +44,68 @@ def GridSearch(X_train, y_train):
 	
 def main():
 
-	## create data...
-	plt.figure(figsize=(8, 8))	
-	
-	X_train, y_train = make_blobs(n_samples=300, centers=2)
-	#X_train, y_train = make_gaussian_quantiles(n_samples =300, n_features=2, n_classes =2)
+	media_vetores_svm = 0
+	media_vetores_RBF = 0
+	n = len(range(0, 30))
+	for i in range(0, 30):
+
+		## create data...
+		plt.figure(figsize=(8, 8))
+
+		X_train, y_train = make_blobs(n_samples=300, centers=2)
+		#X_train, y_train = make_gaussian_quantiles(n_samples =300, n_features=2, n_classes =2)
 
 
-	# cria um SVM
-	clf =  svm.SVC(kernel='linear')
+		# cria um SVM
+		clf =  svm.SVC(kernel='linear')
 
-	# treina o classificador na base de treinamento
-	#print "Training Classifier..."
-	clf.fit(X_train, y_train)
-	
-	plt.subplot(211)
-	plt.scatter(X_train[:, 0], X_train[:, 1], marker='o', c=y_train, s=25, edgecolor='k')		
-	plt.scatter(clf.support_vectors_[:, 0], clf.support_vectors_[:, 1], marker='x')		
-	
-	# mostra o resultado do classificador na base de teste
-	print ('Desempenho Kernel Linear')
-	print (clf.score(X_train, y_train))
-	print ('Vetores de suporte:',  clf.n_support_[0]+clf.n_support_[1] )
-	
+		# treina o classificador na base de treinamento
+		#print "Training Classifier..."
+		clf.fit(X_train, y_train)
 
-	# GridSearch retorna o melhor modelo encontrado na busca
-	best = GridSearch(X_train, y_train)
+		plt.subplot(211)
+		plt.scatter(X_train[:, 0], X_train[:, 1], marker='o', c=y_train, s=25, edgecolor='k')
+		plt.scatter(clf.support_vectors_[:, 0], clf.support_vectors_[:, 1], marker='x')
 
-	# resultado do treinamento
-	print ('Accuracia no kernl RBF:', )
-	print (best.score(X_train, y_train))
-	print ('Vetores de suporte:',  best.n_support_[0]+best.n_support_[1] )
+		# mostra o resultado do classificador na base de teste
+		print ('Desempenho Kernel Linear')
+		print (clf.score(X_train, y_train))
+		print ('Vetores de suporte:',  clf.n_support_[0]+clf.n_support_[1] )
 
+		media_vetores_svm += clf.n_support_[0]+clf.n_support_[1]
 
-	# Treina usando o melhor modelo
-	best.fit(X_train, y_train)
-	plt.subplot(212)
-	plt.scatter(X_train[:, 0], X_train[:, 1], marker='o', c=y_train, s=25, edgecolor='k')		
-	plt.scatter(best.support_vectors_[:, 0], best.support_vectors_[:, 1], marker='x')		
-	plt.show()
+		# GridSearch retorna o melhor modelo encontrado na busca
+		best = GridSearch(X_train, y_train)
+
+		# resultado do treinamento
+		print ('Accuracia no kernl RBF:', )
+		print (best.score(X_train, y_train))
+		print ('Vetores de suporte:',  best.n_support_[0]+best.n_support_[1] )
+
+		media_vetores_RBF += best.n_support_[0]+best.n_support_[1]
 
 
-	# resultado do treinamento
-	#print ('Accuracia no teste:', )
-	#print best.score(X_test, y_test)
-
-	# predicao do classificador
-	#y_pred = best.predict(X_test)
-
-	# cria a matriz de confusao
-	#cm = confusion_matrix(y_test, y_pred)
-	#print cm
+		# Treina usando o melhor modelo
+		best.fit(X_train, y_train)
+		plt.subplot(212)
+		plt.scatter(X_train[:, 0], X_train[:, 1], marker='o', c=y_train, s=25, edgecolor='k')
+		plt.scatter(best.support_vectors_[:, 0], best.support_vectors_[:, 1], marker='x')
+		#plt.show()
 
 
+		# resultado do treinamento
+		#print ('Accuracia no teste:', )
+		#print best.score(X_test, y_test)
+
+		# predicao do classificador
+		#y_pred = best.predict(X_test)
+
+		# cria a matriz de confusao
+		#cm = confusion_matrix(y_test, y_pred)
+		#print cm
+
+	print("media dos vetores SVM: %d" % (media_vetores_svm/n))
+	print("media dos vetores RBF: %d" % (media_vetores_RBF/n))
 
 if __name__ == "__main__":
 	if len(sys.argv) != 1:
