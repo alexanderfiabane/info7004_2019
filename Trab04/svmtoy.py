@@ -52,8 +52,8 @@ def main():
 		## create data...
 		plt.figure(figsize=(8, 8))
 
-		X_train, y_train = make_blobs(n_samples=300, centers=2)
-		#X_train, y_train = make_gaussian_quantiles(n_samples =300, n_features=2, n_classes =2)
+		#X_train, y_train = make_blobs(n_samples=300, centers=2)
+		X_train, y_train = make_gaussian_quantiles(n_samples =300, n_features=2, n_classes =2)
 
 
 		# cria um SVM

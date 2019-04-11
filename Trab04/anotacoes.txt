@@ -1,6 +1,13 @@
 ====== svmtoy
 Utilizando a make_blobs, o classificador que produz mais vetores de suporte é o RBF. Em geral, ambos os classificadores alcançam
-100% de acurácia, porém o que alcança, com maior frequência, para os dados, a melhor acurácia.
-A quantidade média de vetores de suporte é apresentada na Tabela 1.
+100% de acurácia, porém o que alcança, com maior frequência, para os dados, a melhor acurácia é. Tabela 1.
+A quantidade média de vetores de suporte é apresentada na Tabela 2.
 media dos vetores SVM: 13
 media dos vetores RBF: 188
+
+
+Utilizando a make_gaussian_quantiles, o classificador que produz mais vetores de suporte é o SVM. Para essa abordagem, o RBF tem um desempenho
+significativamente superior, alcançando x acurácia Tabela 3.
+A quantidade média de vetores de suporte é apresentada na Tabela 4.
+media dos vetores SVM: 290
+media dos vetores RBF: 30
